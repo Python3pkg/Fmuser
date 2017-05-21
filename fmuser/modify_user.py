@@ -5,7 +5,7 @@ try:
 	import xml.etree.ElementTree as ET 
 except ImportError: 
 	import xml.etree.cElementTree as ET 
-import HTMLParser
+import html.parser
 
 # 美化XML文件，缩进一致
 def pretty_xml(elem, indent = "  ", newline = "\n", null_str_keep = True, level = 0):
@@ -82,7 +82,7 @@ class Muser:
 		tree = ET.parse(file_path, parser = commentTreeBuilder())
 		include_node = tree.getroot() # include节点
 		if self.__debug:
-			print("TARGET %s" % file_path)
+			print(("TARGET %s" % file_path))
 		user_node = include_node.find('user')
 		if user_node is not None:
 			id = user_node.attrib['id']
@@ -94,7 +94,7 @@ class Muser:
 					origion_value = node.get('value')
 					node.set('value', value)
 					is_modify = True
-					print("MODIFY NODE %s ATTR 'value' FROM %s TO %s IN FILE %s" % (key_xpath, origion_value, value, file_path))
+					print(("MODIFY NODE %s ATTR 'value' FROM %s TO %s IN FILE %s" % (key_xpath, origion_value, value, file_path)))
 					break
 
 				if is_modify:
@@ -102,7 +102,7 @@ class Muser:
 
 					# 读取文件内容，替换HTML的格式，重新写入
 					with open(file_path, "r+") as f:
-						txt = HTMLParser.HTMLParser().unescape(f.read())
+						txt = html.parser.HTMLParser().unescape(f.read())
 						f.seek(0)
 						f.truncate()
 						f.write(txt)
